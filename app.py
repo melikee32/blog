@@ -71,7 +71,7 @@ def login():
 
             session.update({ "id": user["id"], "username": user["username"], "email": user["email"], "role": user["role"], "job": user["job"], "photo": user["photo"] })
 
-            flash("Giriş başarılı!", "success")
+            flash(f"Giriş başarılı! Hoş geldin😊🌼 {user['username'].capitalize()}  🤗", "success")
 
             if user["role"] == "admin":
                 return redirect(url_for("admin_panel"))
@@ -125,7 +125,7 @@ def register():
 
             db.commit()
 
-            flash( "Kayıt başarılı 😊. Giriş yapabilirsiniz!", "success" )
+            flash( "Kayıt başarılı 😊🌼. Giriş yapabilirsiniz!", "success" )
 
             return redirect(url_for("login"))
 
@@ -311,27 +311,93 @@ def admin_panel():
     db = get_connection()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute( "SELECT id, username, email, role FROM users" )
+    user_page = request.args.get( "user_page", 1, type=int )
+
+    if user_page < 1:
+        user_page = 1
+
+    users_per_page = 5
+
+    users_offset = (user_page - 1) * users_per_page
+
+    cursor.execute( "SELECT COUNT(*) AS total FROM users" )
+
+    total_users = cursor.fetchone()["total"]
+
+    total_user_pages = (total_users + users_per_page - 1) // users_per_page
+
+    if total_user_pages < 1:
+        total_user_pages = 1
+
+    cursor.execute( "SELECT id, username, email, role FROM users LIMIT %s OFFSET %s", (users_per_page, users_offset) )
 
     users = cursor.fetchall()
 
-    cursor.execute( "SELECT id, title, user_id FROM posts" )
+    page = request.args.get( "page", 1, type=int )
+
+    if page < 1:
+        page = 1
+
+    per_page = 20
+
+    offset = (page - 1) * per_page
+
+    cursor.execute( "SELECT COUNT(*) AS total FROM posts" )
+
+    total_posts = cursor.fetchone()["total"]
+
+    total_pages = (total_posts + per_page - 1) // per_page
+
+    if total_pages < 1:
+        total_pages = 1
+
+    cursor.execute( "SELECT id, title, user_id FROM posts LIMIT %s OFFSET %s", (per_page, offset) )
 
     posts = cursor.fetchall()
 
     cursor.close()
     db.close()
 
-    return render_template( "admin.html", users=users, posts=posts )
-
+    return render_template( "admin.html", users=users, posts=posts, page=page, total_pages=total_pages, user_page=user_page, total_user_pages=total_user_pages )
 # POSTS
 @app.route("/posts")
 def posts():
 
     category = request.args.get( "category", "" ).strip()
 
+    page = request.args.get( "page", 1, type=int )
+
+    if page < 1:
+        page = 1
+
+    per_page = 10
+
+    offset = (page - 1) * per_page
+
     db = get_connection()
     cursor = db.cursor(dictionary=True)
+
+    if category:
+
+        cursor.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM posts
+            WHERE posts.category = %s
+            """,
+            (category,)
+        )
+
+    else:
+
+        cursor.execute( "SELECT COUNT(*) AS total FROM posts" )
+
+    total_posts = cursor.fetchone()["total"]
+
+    total_pages = (total_posts + per_page - 1) // per_page
+
+    if total_pages < 1:
+        total_pages = 1
 
     if category:
 
@@ -342,8 +408,9 @@ def posts():
             JOIN users
                 ON posts.user_id = users.id
             WHERE posts.category = %s
+            LIMIT %s OFFSET %s
             """,
-            (category,)
+            (category, per_page, offset)
         )
 
     else:
@@ -354,15 +421,25 @@ def posts():
             FROM posts
             JOIN users
                 ON posts.user_id = users.id
-            """
+            LIMIT %s OFFSET %s
+            """,
+            (per_page, offset)
         )
 
     result = cursor.fetchall()
 
+    favorite_ids = set()
+
+    if session.get("id"):
+
+        cursor.execute( "SELECT post_id FROM favorites WHERE user_id=%s", (session["id"],) )
+
+        favorite_ids = { row["post_id"] for row in cursor.fetchall() }
+
     cursor.close()
     db.close()
 
-    return render_template( "blog.html", posts=result, current_category=category )
+    return render_template( "blog.html", posts=result, current_category=category, page=page, total_pages=total_pages, favorite_ids=favorite_ids )
 
 # YENİ POST
 @app.route("/posts/new", methods=["GET", "POST"])
@@ -770,7 +847,7 @@ def add_favorite(post_id):
         cursor.close()
         db.close()
 
-    return redirect( url_for("posts") )
+    return redirect( request.referrer or url_for("posts") )
 
 # FAVORİ SİL
 @app.route( "/favorites/delete/<int:post_id>", methods=["POST"] )
@@ -806,7 +883,7 @@ def delete_favorite(post_id):
         cursor.close()
         db.close()
 
-    return redirect( url_for("favorites") )
+    return redirect( request.referrer or url_for("favorites") )
 
 # ARAMA
 @app.route("/search")
