@@ -1,0 +1,218 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="favorites-container">
+
+    <h1>⭐ Favorilerim</h1>
+
+    {% if posts %}
+
+        <div class="favorites-list">
+
+            {% for post in posts %}
+
+                <article class="favorite-card">
+
+                    <div class="favorite-content">
+
+                        <h2>
+                            <a href="{{ url_for('post_detail', post_id=post.id) }}">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+
+                        <p>
+                            {{ post.content[:200] }}
+                            {% if post.content|length > 200 %}
+                                ...
+                            {% endif %}
+                        </p>
+
+                        <small>
+                            ✍️ {{ post.username }}
+                        </small>
+
+                    </div>
+
+                    <div class="favorite-action">
+
+                        <form
+                            action="{{ url_for('delete_favorite', post_id=post.id) }}"
+                            method="POST"
+                        >
+                            <button
+                                type="submit"
+                                class="btn-favorite-star active"
+                                title="Favorilerden çıkar"
+                            >
+                                &#9733;
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-favorites">
+
+            <div class="empty-star">☆</div>
+
+            <h2>Henüz favorin yok</h2>
+
+            <p>
+                Beğendiğin yazıları favorilerine ekleyebilirsin.
+            </p>
+
+            <a
+                href="{{ url_for('posts') }}"
+                class="btn-go-posts"
+            >
+                Yazılara Git
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<style>
+
+.favorites-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.favorites-container h1 {
+    margin-bottom: 30px;
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.favorite-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 25px;
+
+    border-radius: 15px;
+    background: #fff;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.favorite-content {
+    flex: 1;
+}
+
+.favorite-content h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.favorite-content h2 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.favorite-content p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.favorite-content small {
+    color: #888;
+}
+
+
+/* ⭐ Favori yıldız butonu */
+
+.favorite-action {
+    margin-left: 25px;
+}
+
+.btn-favorite-star {
+    background: none;
+    border: none;
+
+    padding: 5px;
+
+    font-size: 2.5rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    color: #ccc;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.btn-favorite-star.active {
+    color: gold;
+}
+
+.btn-favorite-star:hover {
+    transform: scale(1.15);
+}
+
+.btn-favorite-star:focus {
+    outline: none;
+}
+
+
+/* Favori yoksa */
+
+.empty-favorites {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-star {
+    font-size: 5rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-favorites h2 {
+    margin-bottom: 10px;
+}
+
+.empty-favorites p {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.btn-go-posts {
+    display: inline-block;
+
+    padding: 12px 24px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    background: #333;
+    color: white;
+}
+
+</style>
+
+{% endblock %}
+```
