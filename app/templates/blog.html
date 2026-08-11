@@ -31,13 +31,23 @@ content %}
 
     <div class="entry-actions">
       {% if session.id %}
+      {% if post.id in favorite_ids %}
+      <form
+        action="{{ url_for('delete_favorite', post_id=post.id) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button type="submit" class="btn-link" title="Favorilerden çıkar">★</button>
+      </form>
+      {% else %}
       <form
         action="{{ url_for('add_favorite', post_id=post.id) }}"
         method="POST"
         style="display: inline"
       >
-        <button type="submit" class="btn-link">Favorile</button>
+        <button type="submit" class="btn-link" title="Favorilere ekle">☆</button>
       </form>
+      {% endif %}
       {% endif %} {% if session.id and session.id == post.user_id %}
       <a href="{{ url_for('edit_post', id=post.id) }}">Düzenle</a>
       {% endif %} {% if session.id and (session.id == post.user_id or
@@ -62,6 +72,27 @@ content %}
   </li>
   {% endfor %}
 </ul>
+
+{% if total_pages and total_pages > 1 %}
+<nav class="pagination" style="display: flex; gap: 8px; justify-content: center; margin-top: 24px;">
+  {% if page > 1 %}
+    <a href="{{ url_for('posts', category=current_category, page=page-1) }}">← Önceki</a>
+  {% endif %}
+
+  {% for p in range(1, total_pages + 1) %}
+    {% if p == page %}
+      <strong>{{ p }}</strong>
+    {% else %}
+      <a href="{{ url_for('posts', category=current_category, page=p) }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page < total_pages %}
+    <a href="{{ url_for('posts', category=current_category, page=page+1) }}">Sonraki →</a>
+  {% endif %}
+</nav>
+{% endif %}
+
 {% else %}
 <div class="empty-state">Henüz hiç yazı yok. İlk yazıyı sen ekle.</div>
 {% endif %} {% endblock %}
