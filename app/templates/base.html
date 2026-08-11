@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}BLOG{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav">
+        <!-- SOL TARAFF: Blog logosu + Kategori linkleri kapsayıcısı -->
+        <div class="left-group">
+          <a class="brand" href="{{ url_for('posts') }}">Blog</a>
+          <div class="nav-pill categories">
+            <a href="{{ url_for('posts') }}">Genel</a>
+            <a href="{{ url_for('posts', category='Eğitim') }}">Eğitim</a>
+            <a href="{{ url_for('posts', category='Teknoloji') }}">Teknoloji</a>
+            <a href="{{ url_for('posts', category='Seyahat') }}">Seyahat</a>
+            <a href="{{ url_for('posts', category='Sanat') }}">Sanat</a>
+          </div>
+        </div>
+
+        <!-- SAĞ TARAF: Kullanıcı linkleri kapsayıcısı -->
+        <div class="nav-pill user-links">
+          <a href="{{ url_for('new_post') }}">Yeni Yazı</a>
+          <a href="{{ url_for('favorites') }}">Favoriler</a>
+          <a href="{{ url_for('profile') }}">Profil</a>
+          {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('admin_panel') }}">Admin</a>
+          {% endif %}
+          <a href="{{ url_for('exit_session') }}">Çıkış</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Flash mesajları -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+     
+
+        <!--  yazılar -->
+        <section class="post-list">
+          {% block content %}
+            {% for post in posts %}
+              <div class="post">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <small>Kategori: {{ post.category }}</small>
+              </div>
+            {% endfor %}
+          {% endblock %}
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
