@@ -1,0 +1,67 @@
+{% extends "base.html" %} {% block title %}Yazılar {% endblock %} {% block
+content %}
+<div class="page-head">
+  <h1>Yazılar</h1>
+  {% if session.id %}
+  <a class="btn" href="{{ url_for('new_post') }}">Yeni Yazı</a>
+  {% endif %}
+</div>
+
+{% if posts %}
+<ul class="entries">
+  {% for post in posts %}
+  <li class="entry" data-index="{{ '%03d' % loop.index }}">
+    {% if post.created_at %}
+    <div class="entry-eyebrow">{{ post.created_at }}</div>
+    {% endif %}
+    <h2>
+      <a href="{{ url_for('post_detail', post_id=post.id) }}">
+        {{ post.title }}
+      </a>
+    </h2>
+    <p class="entry-eyebrow">
+      {% if post.photo %}
+        <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" alt="{{ post.username }}" style="width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; margin-right: 6px;">
+      {% endif %}
+      Yazar: {{ post.username }}
+    </p>
+    <p>
+      {{ post.content[:180] }}{% if post.content|length > 180 %}…{% endif %}
+    </p>
+
+    <div class="entry-actions">
+      {% if session.id %}
+      <form
+        action="{{ url_for('add_favorite', post_id=post.id) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button type="submit" class="btn-link">Favorile</button>
+      </form>
+      {% endif %} {% if session.id and session.id == post.user_id %}
+      <a href="{{ url_for('edit_post', id=post.id) }}">Düzenle</a>
+      {% endif %} {% if session.id and (session.id == post.user_id or
+      session.role == 'admin') %}
+      <form
+        action="{{ url_for('delete_post', id=post.id) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button
+          type="submit"
+          class="btn-danger"
+          onclick="
+            return confirm('Bu yazıyı silmek istediğinize emin misiniz?');
+          "
+        >
+          Sil
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="empty-state">Henüz hiç yazı yok. İlk yazıyı sen ekle.</div>
+{% endif %} {% endblock %}

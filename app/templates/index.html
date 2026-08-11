@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Blog Sayfası{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>BLOG PAGE</h1>
+        <p style="color: var(--ink-soft); max-width: 46ch;">
+            Düşüncelerini, notlarını ve öğrendiklerini kronolojik bir günceye dönüştür.
+        </p>
+    </div>
+</div>
+
+<p>
+    <a class="btn" href="{{ url_for('posts') }}">Yazıları Gör</a>
+    {% if not session.id %}
+        <a class="btn" style="background: transparent; color: var(--sage-dark); border: 1px solid var(--rule); margin-left: 0.6rem;"
+           href="{{ url_for('register') }}">Kaydol</a>
+    {% endif %}
+</p>
+{% endblock %}
