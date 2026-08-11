@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Admin — Blog{% endblock %}
+
+{% block content %}
+<h1>Admin Paneli</h1>
+<p>Hoş geldin, {{ session.username }} 😊🌼. Bu sayfayı yalnızca admin rolündeki kullanıcılar görebilir.</p>
+
+<div class="card">
+    <h2>Kullanıcılar</h2>
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı adı</th>
+                <th>E-posta</th>
+                <th>Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Hiç kullanıcı yok.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Yazılar</h2>
+    {% if posts %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Başlık</th>
+                <th>Yazar (user_id)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td><a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a></td>
+                <td>{{ post.user_id }}</td>
+                <td>
+                    <form action="{{ url_for('delete_post', id=post.id) }}" method="POST" style="display: inline">
+                        <button
+                            type="submit"
+                            class="btn-danger"
+                            onclick="return confirm('Bu yazıyı silmek istediğinize emin misiniz?');"
+                        >
+                            Sil
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Hiç yazı yok.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Hızlı bağlantılar</h2>
+    <p><a href="{{ url_for('posts') }}">Tüm yazıları görüntüle</a></p>
+</div>
+{% endblock %}
