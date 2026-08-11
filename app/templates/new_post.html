@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Yeni Yazı — Blog{% endblock %} {%
+block content %}
+<div class="card">
+  <h1>Yeni Yazı</h1>
+
+  <form action="{{ url_for('new_post') }}" method="POST">
+    <div class="field">
+      <label for="title">Başlık</label>
+      <input type="text" id="title" name="title" required />
+    </div>
+
+    <div class="field">
+      <label for="content">İçerik</label>
+      <textarea id="content" name="content" required></textarea>
+    </div>
+
+    <label for="category">Kategori:</label>
+    <select name="category" id="category" required>
+      <option value="Eğitim">Eğitim</option>
+      <option value="Teknoloji">Teknoloji</option>
+      <option value="Seyahat">Seyahat</option>
+      <option value="Sanat">Sanat</option>
+      <option value="Genel">Genel</option>
+    </select>
+
+    <button type="submit">Yayınla</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} — Blog {% endblock %}
+
+{% block content %}
+
+<article>
+
+    <h1>{{ post.title }}</h1>
+
+    <p>
+        {% if post.photo %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" alt="{{ post.username }}" style="width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; margin-right: 6px;">
+        {% endif %}
+        Yazar: {{ post.username }}
+    </p>
+
+    <p>{{ post.content }}</p>
+
+</article>
+
+
+<hr>
+
+
+<section class="comments">
+
+    <h2>Yorumlar</h2>
+
+    {% if comments %}
+
+        {% for comment in comments %}
+
+            <div class="comment">
+
+                {% if comment.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ comment.photo) }}" alt="{{ comment.username }}" style="width: 20px; height: 20px; border-radius: 50%; vertical-align: middle; margin-right: 6px;">
+                {% endif %}
+                <strong>{{ comment.username }}</strong>
+
+                <p>{{ comment.comment_text }}</p>
+
+                {% if comment.created_at %}
+                    <small>{{ comment.created_at }}</small>
+                {% endif %}
+
+                {% if session.id and (session.id == comment.user_id or session.role == 'admin') %}
+                    <form action="{{ url_for('delete_comment', id=comment.id) }}" method="POST" style="display: inline">
+                        <button
+                            type="submit"
+                            class="btn-danger"
+                            onclick="return confirm('Bu yorumu silmek istediğinize emin misiniz?');"
+                        >
+                            Sil
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>Henüz yorum yapılmamış.</p>
+
+    {% endif %}
+
+</section>
+
+
+<hr>
+
+
+{% if session.id %}
+
+    <section>
+
+        <h2>Yorum Yap</h2>
+
+        <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST">
+
+            <textarea
+                name="comment_text"
+                placeholder="Yorumunuzu yazın..."
+                required
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">Yorum Yap</button>
+
+        </form>
+
+    </section>
+
+{% else %}
+
+    <p>
+        Yorum yapmak için
+        <a href="{{ url_for('login') }}">giriş yapmalısınız.</a>
+    </p>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Yazıyı Düzenle — Blog{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Yazıyı Düzenle</h1>
+
+    <form action="{{ url_for('edit_post', id=post.id) }}" method="POST">
+        <div class="field">
+            <label for="title">Başlık</label>
+            <input type="text" id="title" name="title" value="{{ post.title }}" required>
+        </div>
+
+        <div class="field">
+            <label for="content">İçerik</label>
+            <textarea id="content" name="content" required>{{ post.content }}</textarea>
+        </div>
+
+        <button type="submit">Kaydet</button>
+    </form>
+</div>
+{% endblock %}
