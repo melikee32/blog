@@ -10,9 +10,11 @@
     />
   </head>
   <body>
+    <!-- Animasyonlu Arka Plan Kapsayıcısı -->
+    <div class="bg-animated" aria-hidden="true"></div>
+
     <header class="site-header">
       <nav class="site-nav">
-        <!-- SOL TARAFF: Blog logosu + Kategori linkleri kapsayıcısı -->
         <div class="left-group">
           <a class="brand" href="{{ url_for('posts') }}">Blog</a>
           <div class="nav-pill categories">
@@ -24,21 +26,24 @@
           </div>
         </div>
 
-        <!-- SAĞ TARAF: Kullanıcı linkleri kapsayıcısı -->
         <div class="nav-pill user-links">
-          <a href="{{ url_for('new_post') }}">Yeni Yazı</a>
-          <a href="{{ url_for('favorites') }}">Favoriler</a>
-          <a href="{{ url_for('profile') }}">Profil</a>
-          {% if session.get('role') == 'admin' %}
-            <a href="{{ url_for('admin_panel') }}">Admin</a>
+          {% if session.id %}
+            <a href="{{ url_for('new_post') }}">Yeni Yazı</a>
+            <a href="{{ url_for('favorites') }}">Favoriler</a>
+            <a href="{{ url_for('profile') }}">Profil</a>
+            {% if session.get('role') == 'admin' %}
+              <a href="{{ url_for('admin_panel') }}">Admin</a>
+            {% endif %}
+            <a href="{{ url_for('exit_session') }}">Çıkış</a>
+          {% else %}
+            <a href="{{ url_for('login') }}">Giriş Yap</a>
+            <a href="{{ url_for('register') }}">Kaydol</a>
           {% endif %}
-          <a href="{{ url_for('exit_session') }}">Çıkış</a>
         </div>
       </nav>
     </header>
 
     <main>
-      <!-- Flash mesajları -->
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
@@ -47,21 +52,17 @@
         {% endif %}
       {% endwith %}
 
-     
-
-        <!--  yazılar -->
-        <section class="post-list">
-          {% block content %}
-            {% for post in posts %}
-              <div class="post">
-                <h2>{{ post.title }}</h2>
-                <p>{{ post.content }}</p>
-                <small>Kategori: {{ post.category }}</small>
-              </div>
-            {% endfor %}
-          {% endblock %}
-        </section>
-      </div>
+      <section class="post-list">
+        {% block content %}
+          {% for post in posts %}
+            <div class="post">
+              <h2>{{ post.title }}</h2>
+              <p>{{ post.content }}</p>
+              <small>Kategori: {{ post.category }}</small>
+            </div>
+          {% endfor %}
+        {% endblock %}
+      </section>
     </main>
   </body>
 </html>

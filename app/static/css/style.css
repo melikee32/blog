@@ -313,3 +313,318 @@ body {
 .btn-favorite-star.active {
     color: gold;
 }
+
+
+
+/* ==========================================
+   1. FONT YÜKLEMELERİ (MUTLAKA EN ÜSTTE)
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --paper: #faf7f2;
+    --paper-raised: #ffffff;
+    --ink: #22262b;
+    --ink-soft: #565b52;
+    --rule: #ddd6c6;
+    --sage: #4b6858;
+    --sage-dark: #374d41;
+    --gold: #c99a3b;
+    --clay: #b5622b;
+    --radius: 8px;
+}
+
+/* Genel Sıfırlamalar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5em;
+}
+
+h1 { font-size: 2.1rem; }
+h2 { font-size: 1.5rem; }
+
+a {
+    color: var(--sage-dark);
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.15s ease;
+}
+
+/* ---------- Header & Navigasyon ---------- */
+.site-header {
+    width: 100%;
+    padding: 15px 30px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--sage-dark);
+    letter-spacing: -0.5px;
+}
+
+.nav-pill {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(244, 246, 248, 0.8);
+    padding: 8px 18px;
+    border-radius: 100px;
+}
+
+.nav-pill a {
+    color: var(--ink-soft);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-pill a:hover {
+    color: var(--sage-dark);
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ---------- Forms & Layout ---------- */
+form { display: flex; flex-direction: column; gap: 1.1rem; }
+
+label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+}
+
+button, .btn {
+    align-self: flex-start;
+    background: var(--sage);
+    color: #fff;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+button:hover, .btn:hover { background: var(--sage-dark); }
+
+/* ---------- Flash messages ---------- */
+.flash {
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+.flash-success { background: #edf3ee; color: var(--sage-dark); border-color: #cfe0d3; }
+.flash-error { background: #fbeee6; color: var(--clay); border-color: #f0d3c0; }
+
+.btn-favorite-star {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #ccc;
+    transition: transform 0.2s, color 0.2s;
+}
+.btn-favorite-star:hover { transform: scale(1.15); }
+.btn-favorite-star.active { color: var(--gold); }
+
+/* ==========================================
+   YENİ ARKA PLAN (Snooth Aura Glow)
+   ========================================== */
+.gradient-bg, .bg-animated {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #f7f4ec;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(210, 222, 198, 0.85) 0px, transparent 50%),
+    radial-gradient(at 90% 20%, rgba(235, 228, 208, 0.9) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(219, 230, 210, 0.75) 0px, transparent 50%);
+  background-size: 130% 130%;
+  animation: aura-glow 12s ease-in-out infinite alternate;
+}
+
+@keyframes aura-glow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 30% 100%; }
+}
+
+/* ==========================================
+   YENİ CAM KARTLAR VE YAZI LİSTESİ
+   ========================================== */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.post {
+  position: relative;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--sage), var(--sage-dark));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.post:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 20px 35px -10px rgba(75, 104, 88, 0.15);
+}
+
+.post:hover::before {
+  opacity: 1;
+}
+
+.post h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin: 6px 0 10px 0;
+  transition: color 0.2s ease;
+}
+
+.post:hover h2 {
+  color: var(--sage-dark);
+}
+
+.post p {
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  margin-bottom: 18px;
+}
+
+.post small {
+  display: inline-flex;
+  align-items: center;
+  background: #e9efe0;
+  color: var(--sage-dark);
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.post-number {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold) 0%, #a37a28 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+
+
+    .bg-animated {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    /* Arka plan renkleri ve nokta boyutu */
+    background-color: #dfe3dc;
+    background-image: radial-gradient(#a3af9a 1px, transparent 2px);
+    background-size: 45px 45px;
+
+    /* GPU ivmelendirmesi ile akıcı görünüm */
+    will-change: background-position;
+
+    /* Süre 8 saniyeye çekilerek hızlandırıldı */
+    animation: grid-move 15s linear infinite;
+}
+
+@keyframes grid-move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        /* Kusursuz sonsuz döngü için background-size ile tam uyumlu */
+        background-position: 45px 45px;
+    }
+}
